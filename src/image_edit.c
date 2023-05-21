@@ -5,52 +5,65 @@
 #include "structures.h"
 #include "util.h"
 
-void rotate_counterclockwise(image_t *img) {
+void rotate_counterclockwise(image_t *img) 
+{
+    // Calculate dimensions of new image after rotation
     image_t new_image;
     int width=img->w;
     int height=img->h;
     new_image.img= malloc(width * height * sizeof(pixel_t)); //NEW ARRAY
-    for (int i = 0; i <height; i++) 
+    /*if(new_image.img==NULL)
     {
-        for (int j = 0; j< width; j++) 
-        {
-            //we want the pixel from our pixel array, and we have the formula 
-            /*pixel_t* srcpixel = &(img->img[i * width + j]);*/
-            int rotX=i;
-            int rotY=height-1-j;
+    fprintf(stderr, "Unable to allocate memory\n");
+    exit(EXIT_FAILURE);
+    }*/
 
-            new_image.img[rotY*width+rotX] = img->img[i*img->w+j];
+    
+    for (int i = 0; i <width; i++) 
+    {
+        for (int j = 0; j<height ; j++) 
+        {
+            //we want the pixel from our pixel array, and we have the formula after deriving it
+            int rotX=j;
+            int rotY=width-1-i;
+
+            new_image.img[rotY*height+rotX] = img->img[j*img->w+i];
         }
     }
+
     free(img->img);
     img->w=height;
     img->h=width;
     img->img=new_image.img;
-
+    
 }
-
 void rotate_clockwise(image_t *img) {
+    // Calculate dimensions of new image after rotation
     image_t new_image;
     int width=img->w;
     int height=img->h;
     new_image.img= malloc(width * height * sizeof(pixel_t)); //NEW ARRAY
+   
     for (int i = 0; i <height; i++) 
     {
         for (int j = 0; j< width; j++) 
         {
             //we want the pixel from our pixel array, and we have the formula after deriving it
-            int rotX=height-1-i;
+            int rotX=height-i-1;
             int rotY=j;
-
-            new_image.img[rotY*width+rotX] = img->img[i*img->w+j];
+            new_image.img[rotY*height+rotX] = img->img[i*img->w+j];
         }
     }
+
     free(img->img);
     img->w=height;
     img->h=width;
     img->img=new_image.img;
 
 }
+
+
+
 
 void mirror_horizontal(image_t *img) {
     image_t new_image;
