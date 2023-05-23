@@ -12,12 +12,6 @@ void rotate_counterclockwise(image_t *img)
     int width=img->w;
     int height=img->h;
     new_image.img= malloc(width * height * sizeof(pixel_t)); //NEW ARRAY
-    /*if(new_image.img==NULL)
-    {
-    fprintf(stderr, "Unable to allocate memory\n");
-    exit(EXIT_FAILURE);
-    }*/
-
     
     for (int i = 0; i <width; i++) 
     {
@@ -74,9 +68,8 @@ void mirror_horizontal(image_t *img) {
     {
         for (int j = 0; j< width; j++) 
         {
-            //we want the pixel from our pixel array, and we have the formula 
-            /*pixel_t* srcpixel = &(img->img[i * width + j]);*/
-            int rotX=width-1-j;
+            //we want the pixel from our pixel array, and we have the formula after deriving it
+            int rotX=width-1-j; //iterate in columns because horizontal
             int rotY=i;
 
             new_image.img[rotY*width+rotX] = img->img[i*img->w+j];
@@ -84,7 +77,7 @@ void mirror_horizontal(image_t *img) {
         }
     }
     free(img->img);
-    img->w=width;
+    img->w=width; //dimensions remain same
     img->h=height;
     img->img=new_image.img;
 }
@@ -98,7 +91,7 @@ void mirror_vertical(image_t *img) {
     {
         for (int j = 0; j< width; j++) 
         {
-            //we want the pixel from our pixel array, and we have the formula 
+            //we want the pixel from our pixel array, and we have the formula after deriving it
             int rotX=j;
             int rotY=height-1-i;
 
@@ -106,7 +99,7 @@ void mirror_vertical(image_t *img) {
         }
     }
     free(img->img);
-    img->w=width;
+    img->w=width;//dimensions remain same
     img->h=height;
     img->img=new_image.img;
 }
@@ -115,22 +108,20 @@ void resize(image_t *img, int new_width, int new_height)
 {
 
     image_t new_image;
-    /*int width=img->w;
-    int height=img->h;*/
-    //CASE 2 to reduce size
     new_image.img= malloc(new_width * new_height * sizeof(pixel_t)); //NEW ARRAY
     int i;
-    //BLACK IS INPUTTED IN WHOLE NEW BUFFER
+    //BLACK In WHOLE NEW image buffer
     for (i = 0; i < new_height*new_width; i++) 
     {
         new_image.img[i].r = 0;
         new_image.img[i].g =0;
         new_image.img[i].b= 0;
     }
-    int copy_width = (new_width < img->w) ? new_width : img->w;
+    //black is already in the whole image, following lazy operator chooses height and width, whether to decrease dimensions or maintain
+    int copy_width = (new_width < img->w) ? new_width : img->w; //maintains old image if larger, will crop if shorter
     int copy_height = (new_height < img->h) ? new_height : img->h;
-    ///LOOP WHICH COPIES OLD IMAGE TO NEW
-    for (int i = 0; i <copy_height; i++) 
+    ///old image or part of it is copied
+    for (int i = 0; i <copy_height; i++)//copied is old height if we resize to bigger and new height if we resize smaller
     {
         for (int j = 0; j<copy_width; j++) 
         {         
@@ -138,8 +129,8 @@ void resize(image_t *img, int new_width, int new_height)
         new_image.img[i*new_width+j] = img->img[i*img->w+j]; 
         }
     }
-    free(img->img); //code passed two tests so basically we have resized to a new 
-    img->w=new_width;
+    free(img->img); 
+    img->w=new_width;//new dimenions need to be set, which are passed as args
     img->h=new_height;
     img->img=new_image.img;
 
